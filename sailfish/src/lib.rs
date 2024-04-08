@@ -55,7 +55,7 @@ pub trait TemplateOnce: Sized + private::Sealed {
     /// the next time, buffer will be pre-allocated based on the cached length.
     ///
     /// If you don't want this behaviour, you can use `render_once_to` method instead.
-    fn render_once(self) -> runtime::RenderResult;
+    async fn render_once(self) -> runtime::RenderResult;
 
     /// Render the template and append the result to `buf`.
     ///
@@ -91,7 +91,7 @@ pub trait TemplateOnce: Sized + private::Sealed {
     /// let mut buffer = Buffer::with_capacity(100);
     /// tpl.render_once_to(&mut buffer).unwrap();
     /// ```
-    fn render_once_to(self, buf: &mut Buffer) -> Result<(), RenderError>;
+    async fn render_once_to(self, buf: &mut Buffer) -> Result<(), RenderError>;
 }
 
 /// Work in Progress

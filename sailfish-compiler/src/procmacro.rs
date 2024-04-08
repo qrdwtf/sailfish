@@ -354,18 +354,18 @@ fn derive_template_impl(tokens: TokenStream) -> Result<TokenStream, syn::Error> 
     // drops when the implementation is written in `sailfish` crate.
     let tokens = quote! {
         impl #impl_generics sailfish::TemplateOnce for #name #ty_generics #where_clause {
-            fn render_once(self) -> sailfish::RenderResult {
+            async fn render_once(self) -> sailfish::RenderResult {
                 use sailfish::runtime::{Buffer, SizeHint};
                 static SIZE_HINT: SizeHint = SizeHint::new();
 
                 let mut buf = Buffer::with_capacity(SIZE_HINT.get());
-                self.render_once_to(&mut buf)?;
+                self.render_once_to(&mut buf).await?;
                 SIZE_HINT.update(buf.len());
 
                 Ok(buf.into_string())
             }
 
-            fn render_once_to(self, __sf_buf: &mut sailfish::runtime::Buffer) -> std::result::Result<(), sailfish::runtime::RenderError> {
+            async fn render_once_to(self, __sf_buf: &mut sailfish::runtime::Buffer) -> std::result::Result<(), sailfish::runtime::RenderError> {
                 // This line is required for cargo to track child templates
                 #include_bytes_seq;
 
